@@ -10,7 +10,7 @@ cd linux/linux*
 make clean
 make mrproper
 
-make hi3516d_defconfig 
+make hi3516d_full_defconfig 
 
 
 make -j 4 uImage dtsb
