@@ -3,7 +3,7 @@
 export ARCH=arm
 export CROSS_COMPILE=arm-linux-gnueabihf-
 export CFLAGS="-O4 -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard"
-export CXXFLAGS=$CFLAGS
+export CXXFLAGS="$CFLAGS"
 
 
 cd linux/linux*
@@ -12,7 +12,6 @@ make mrproper
 
 make hi3516d_defconfig 
 
-make -j 4
 
 make -j 4 uImage dtsb
 
