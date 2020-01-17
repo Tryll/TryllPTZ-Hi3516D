@@ -21,6 +21,13 @@ config ARCH_HI3516A
 	help
 		Support for Hisilicon Hi3516A Soc family.
 
+config ARCH_HI3516A_MODEL_D
+	bool "Model D of HI3516A"
+	depends on ARCH_HI3516A
+	help
+		A Sub model of HI3516A
+
+
 config ARCH_HI3518EV20X
 	bool "Hisilicon Hi3518ev20x ARM926T(Single) family"
 	depends on ARCH_MULTI_V5

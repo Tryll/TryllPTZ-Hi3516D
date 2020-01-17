@@ -174,9 +174,15 @@ dtb-$(CONFIG_ARCH_HISI) += \
 	hi3519-demb.dtb
 dtb-$(CONFIG_ARCH_HIX5HD2) += \
 	hisi-x5hd2-dkb.dtb
-dtb-$(CONFIG_ARCH_HI3516A) += \
-	hi3516a-demb.dtb \
-	hi3516d.dtb
+
+ifeq ($(CONFIG_ARCH_HI3516A_MODEL_D),y)
+	dtb-$(CONFIG_ARCH_HI3516A) += \
+		hi3516d.dtb
+else
+	dtb-$(CONFIG_ARCH_HI3516A) += \
+		hi3516a-demb.dtb
+endif
+
 dtb-$(CONFIG_ARCH_HI3518EV20X) += \
 	hi3518ev20x-demb.dtb
 dtb-$(CONFIG_ARCH_HI3521A) += \
