@@ -13,7 +13,8 @@ make mrproper
 make hi3516d_full_defconfig 
 
 
-make -j 4 uImage dtsb
+make -j 2 uImage dtbs 
+
 
 # modules
 
