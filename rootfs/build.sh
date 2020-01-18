@@ -10,8 +10,12 @@ mkdir $TARGET
 
 
 # Debian based rootfs with busybox udpkg.
-wget -O "$TARGET/initrd.gz" http://ftp.se.debian.org/debian/dists/stable/main/installer-armhf/current/images/cdrom/initrd.gz
- 
+#wget -O "$TARGET/initrd.gz" http://ftp.se.debian.org/debian/dists/stable/main/installer-armhf/current/images/cdrom/initrd.gz
+wget -O "$TARGET/initrd.gz" http://ftp.se.debian.org/debian/dists/stable/main/installer-armhf/current/images/netboot/initrd.gz
+
+
+
+
 
 # Removing debian-installer, kernel modules and other extras
 
@@ -44,5 +48,6 @@ echo -e "root:*:0:0:root:/:/bin/sh" > etc/passwd
 
 cp -rf $SRC/overlay/* .
 ln -s bin/busybox linuxrc
+ln -s bin/busybox sbin/start-stop-daemon
 
 
