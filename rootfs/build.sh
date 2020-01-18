@@ -46,6 +46,8 @@ echo -e "root:*:0:0:root:/:/bin/sh" > etc/passwd
 # OVERLAY:
 #***********************************************************
 
+mkdir $SRC/overlay/overlay/work $SRC/overlay/overlay/upper $SRC/overlay/overlay/merged $SRC/overlay/rom
+
 cp -rf $SRC/overlay/* .
 ln -s bin/busybox bin/init
 
