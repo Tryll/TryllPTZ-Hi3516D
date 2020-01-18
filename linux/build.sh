@@ -6,7 +6,7 @@ export CFLAGS="-O4 -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard"
 export CXXFLAGS="$CFLAGS"
 
 
-cd linux/linux*
+cd linux*
 make clean
 make mrproper
 
