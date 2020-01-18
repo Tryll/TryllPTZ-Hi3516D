@@ -33,6 +33,7 @@ rm -rf initrd
 # Remove debian installer stuff
 find -name '*installer*' -exec rm -rv '{}' \;
 rm -rf ./usr/lib/finish-install.d
+rm -f ./sbin/init
 
 
 # Remove kernel modules
