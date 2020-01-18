@@ -2,24 +2,31 @@
 
 on_exit()
 {
-  mountpoint -q /proc && umount /proc
-  exec /sbin/init $*
+#  mountpoint -q /proc && umount /proc
+  umount /proc
+  exec /bin/init $*
 }
 trap on_exit 0
 
 mount -t proc proc /proc || exit
 grep -q overlay /proc/filesystems || { echo "Overlay: Not supported by kernel"; exit }
 
+
+
 # kernel cmdline option "overlay=" specifies the overlayfs device,
 # and "overlayfstype=" specifies the overlay filesystem type.
 ovl_device=`sed -nr 's/.*\<overlay=([^[:space:]]*).*/\1/p' /proc/cmdline`
 ovl_fstype=`sed -nr 's/.*\<overlayfstype=([^[:space:]]*).*/\1/p' /proc/cmdline`
-mount -t "${ovl_fstype:-jffs2}" "${ovl_device}" /overlay || \
-mount -t tmpfs tmpfs /overlay  || { echo "Overlay: Failed to overlay rootfs with tmpfs";  exit }
 
-mount -t overlay overlay -olowerdir=/,upperdir=/overlay,ro /mnt || { echo "Overlay: Failed to overlay rootfs"; umount /overlay; exit; }
 
-pivot_root /mnt /mnt/rom
+mount -t "${ovl_fstype:-jffs2}" "${ovl_device}" /overlay/upper || \
+mount -t tmpfs tmpfs /overlay/upper  || { echo "Overlay: Failed to overlay rootfs with tmpfs";  exit }
+mount -t tmpfs tmpfs /overlay/work
+
+
+mount -t overlay overlay -olowerdir=/,workdir=/overlay/work,upperdir=/overlay/upper,ro /overlay/merged || { echo "Overlay: Failed to overlay rootfs"; umount /overlay; exit; }
+
+pivot_root /overlay/merged /rom
 mount -o noatime,move /rom/proc /proc
 mount -o noatime,move /rom/dev /dev
 mount -o noatime,move /rom/overlay /overlay

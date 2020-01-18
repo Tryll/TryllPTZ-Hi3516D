@@ -47,7 +47,6 @@ echo -e "root:*:0:0:root:/:/bin/sh" > etc/passwd
 #***********************************************************
 
 cp -rf $SRC/overlay/* .
-ln -s bin/busybox linuxrc
-ln -s bin/busybox sbin/start-stop-daemon
+ln -s bin/busybox bin/init
 
 
