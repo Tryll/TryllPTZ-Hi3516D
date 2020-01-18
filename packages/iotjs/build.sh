@@ -1,5 +1,9 @@
 #!/bin/sh
 
+
+SRC=`dirname "$(readlink -f "$0")"`
+
+cd $SRC
 git clone --depth 1 --single-branch https://github.com/jerryscript-project/iotjs.git
   
 cd iotjs
