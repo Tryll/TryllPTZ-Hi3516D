@@ -9,7 +9,7 @@ on_exit()
 trap on_exit 0
 
 mount -t proc proc /proc || exit
-grep -q overlay /proc/filesystems || { echo "Overlay: Not supported by kernel"; exit }
+grep -q overlay /proc/filesystems || { echo "Overlay: Not supported by kernel"; exit; }
 
 
 
@@ -20,7 +20,7 @@ ovl_fstype=`sed -nr 's/.*\<overlayfstype=([^[:space:]]*).*/\1/p' /proc/cmdline`
 
 
 mount -t "${ovl_fstype:-jffs2}" "${ovl_device}" /overlay/upper || \
-mount -t tmpfs tmpfs /overlay/upper  || { echo "Overlay: Failed to overlay rootfs with tmpfs";  exit }
+mount -t tmpfs tmpfs /overlay/upper  || { echo "Overlay: Failed to overlay rootfs with tmpfs";  exit; }
 mount -t tmpfs tmpfs /overlay/work
 
 
