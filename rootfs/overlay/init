@@ -17,7 +17,7 @@ ovl_fstype=`sed -nr 's/.*\<overlayfstype=([^[:space:]]*).*/\1/p' /proc/cmdline`
 mount -t "${ovl_fstype:-jffs2}" "${ovl_device}" /overlay || \
 mount -t tmpfs tmpfs /overlay  || { echo "Overlay: Failed to overlay rootfs with tmpfs";  exit }
 
-mount -t overlayfs overlayfs -olowerdir=/,upperdir=/overlay,ro /mnt || { echo "Overlay: Failed to overlay rootfs"; umount /overlay; exit; }
+mount -t overlay overlay -olowerdir=/,upperdir=/overlay,ro /mnt || { echo "Overlay: Failed to overlay rootfs"; umount /overlay; exit; }
 
 pivot_root /mnt /mnt/rom
 mount -o noatime,move /rom/proc /proc
