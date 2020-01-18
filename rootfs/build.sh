@@ -12,4 +12,7 @@ mkdir etc dev proc sys usr opt var tmp mnt bin sbin usr/bin usr/sbin lib root
 
 
 
+cd lib
+cp -rd /usr/arm-linux-gnueabihf/lib/* .
 
+ 
