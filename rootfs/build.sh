@@ -50,6 +50,8 @@ echo -e "root:*:0:0:root:/:/bin/sh" > etc/passwd
 #mkdir -p $SRC/overlay/overlay/work $SRC/overlay/overlay/upper $SRC/overlay/overlay/merged $SRC/overlay/rom
 
 cp -rf $SRC/overlay/* .
-ln -s bin/busybox bin/init
+cd bin
+ln -s busybox init
+cd ..
 
 
