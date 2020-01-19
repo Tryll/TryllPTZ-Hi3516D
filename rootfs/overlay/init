@@ -3,32 +3,41 @@
 on_exit()
 {
 #  mountpoint -q /proc && umount /proc
-  umount /proc
+#  umount /proc
   exec /bin/init $*
 }
 trap on_exit 0
 
-mount -t proc proc /proc || exit
+mount -t proc proc /proc
 grep -q overlay /proc/filesystems || { echo "Overlay: Not supported by kernel"; exit; }
 
+mount -t tmpfs inittemp /mnt
+mkdir /mnt/lower
+mkdir /mnt/rw
+mount -t tmpfs root-rw /mnt/rw
 
 
-# kernel cmdline option "overlay=" specifies the overlayfs device,
-# and "overlayfstype=" specifies the overlay filesystem type.
-ovl_device=`sed -nr 's/.*\<overlay=([^[:space:]]*).*/\1/p' /proc/cmdline`
-ovl_fstype=`sed -nr 's/.*\<overlayfstype=([^[:space:]]*).*/\1/p' /proc/cmdline`
+mkdir /mnt/rw/upper
+mkdir /mnt/rw/work
+mkdir /mnt/newroot
+
+rootDev=`awk '$2 == "/" {print $1}' /etc/fstab`
+rootMountOpt=`awk '$2 == "/" {print $4}' /etc/fstab`
+rootFsType=`awk '$2 == "/" {print $3}' /etc/fstab`
+mount -t ${rootFsType} -o ${rootMountOpt},ro ${rootDev} /mnt/lower
 
 
-mount -t "${ovl_fstype:-jffs2}" "${ovl_device}" /overlay/upper || \
-mount -t tmpfs tmpfs /overlay/upper  || { echo "Overlay: Failed to overlay rootfs with tmpfs";  exit; }
-mount -t tmpfs tmpfs /overlay/work
+mount -t overlay -o lowerdir=/mnt/lower,upperdir=/mnt/rw/upper,workdir=/mnt/rw/work overlayfs-root /mnt/newroot
+
+mkdir /mnt/newroot/ro
+mkdir /mnt/newroot/rw
+# remove root mount from fstab (this is already a non-permanent modification)
+grep -v "$rootDev" /mnt/lower/etc/fstab > /mnt/newroot/etc/fstab
+
+cd /mnt/newroot
+pivot_root . mnt
 
 
-mount -t overlay overlay -olowerdir=/,workdir=/overlay/work,upperdir=/overlay/upper,ro /overlay/merged || { echo "Overlay: Failed to overlay rootfs"; umount /overlay; exit; }
 
-pivot_root /overlay/merged /rom
-mount -o noatime,move /rom/proc /proc
-mount -o noatime,move /rom/dev /dev
-mount -o noatime,move /rom/overlay /overlay
 
 
